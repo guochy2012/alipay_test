@@ -1,2 +1,7 @@
-<h1>Welcome#index</h1>
-<p>Find me in app/views/welcome/index.html.erb</p>
+<h1>付款页面</h1>
+<p>测试</p>
+
+<%= link_to "付款", :controller => :trade , :action => 'get_auth_token' %>
+
+
+<%= flash[:notice] %>

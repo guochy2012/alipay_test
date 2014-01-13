@@ -5,16 +5,21 @@ class TradeController < ApplicationController
 
 	include TradeHelper
 
-	def process_trade
+	before_filter :process_trade, :only => [:callback, :notify]
 
+	def process_trade
+		@out_trade_no = params[:out_trade_no]
+		@trade_no = params[:trade_no]
+		p '交易号码为:' + @trade_no.to_s
 	end
 
-	def done
-
+	def callback
+		flash[:notice] = "付款成功" + @trade_no.to_s
+		redirect_to :root
 	end
 
 	def notify
-
+		render text: 'success'
 	end
 
 	def get_auth_token
@@ -29,13 +34,13 @@ class TradeController < ApplicationController
 		}
 		req = {
 			:subject 				=> 'feiding',
-			:out_trade_no		=> '123456789',
+			:out_trade_no		=> Time.now.to_s,
 			:total_fee					=> '0.01',
 			:seller_account_name	=> 'admin@feding.net',
-			:call_back_url				=> 'http://127.0.0.1:3000/callback',
-			:notify_url						=> 'http://127.0.0.1:3000/notify',
+			:call_back_url				=> 'http://192.168.1.201:3000/trade/callback',
+			:notify_url						=> 'http://192.168.1.201:3000/trade/notify',
 			:out_user				=> '1234',
-			:merchant_url		=> 'http://127.0.0.1:3000',
+			:merchant_url		=> 'http://192.168.1.201:3000',
 			:pay_expire			=> '30'
 		}
 		url =  wap_trade_auth_url(options, req)
