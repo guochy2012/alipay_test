@@ -1,5 +1,6 @@
 #coding: utf-8
 require 'net/http'
+require 'cgi'
 class TradeController < ApplicationController
 
 	include TradeHelper
@@ -38,10 +39,13 @@ class TradeController < ApplicationController
 			:pay_expire			=> '30'
 		}
 		url =  wap_trade_auth_url(options, req)
+		token = get_token(url)
 
-		p url
+		options[:service] = 'alipay.wap.auth.authAndExecute'
+		url2 = get_trade_url(options, token)
 
-		redirect_to "#{url}"
+		redirect_to url2
+		
 	end
 
 	def create_trade
