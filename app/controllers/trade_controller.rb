@@ -1,9 +1,11 @@
 #coding: utf-8
 require 'net/http'
 require 'cgi'
+# require Rails.root.to_s + '/lib/alipay'
 class TradeController < ApplicationController
 
-	include TradeHelper
+	# include TradeHelper
+	require Rails.root.to_s + '/lib/alipay'
 
 	before_filter :process_trade, :only => [:callback, :notify]
 
@@ -43,18 +45,14 @@ class TradeController < ApplicationController
 			:merchant_url		=> 'http://192.168.1.201:3000',
 			:pay_expire			=> '30'
 		}
-		url =  wap_trade_auth_url(options, req)
-		token = get_token(url)
+		url =  Alipay.wap_trade_auth_url(options, req)
+		token = Alipay.get_token(url)
 
 		options[:service] = 'alipay.wap.auth.authAndExecute'
-		url2 = get_trade_url(options, token)
+		url2 = Alipay.get_trade_url(options, token)
 
 		redirect_to url2
 		
-	end
-
-	def create_trade
-
 	end
 
 
